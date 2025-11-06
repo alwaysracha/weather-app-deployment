@@ -16,10 +16,10 @@ Docker Compose orchestration for the Weather App.
 ### Deploy to QNAP
 1. Clone this repo on QNAP
 2. Run: `docker-compose up -d`
-3. Access at http://qnap-ip:3000
+3. Access at http://qnap-nas-racha.tail2059a4.ts.net:3000
 
 ## Scaling
-docker-compose up -d --scale weatherui=3
+`docker-compose up -d --scale weatherui=3`
 
 ## Architecture
 [Add your architecture diagram here]
