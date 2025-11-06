@@ -21,7 +21,5 @@ Docker Compose orchestration for the Weather App.
 ## Scaling
 docker-compose up -d --scale weatherui=3
 
-text
-
 ## Architecture
 [Add your architecture diagram here]
