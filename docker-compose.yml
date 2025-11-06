@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  weatherapi:
+    image: alwaysracha/weather-api:latest
+    container_name: weatherapi
+    networks:
+      - weather-network
+    ports:
+      - "5047:5047"
+    restart: unless-stopped
+
+  weatherui:
+    image: alwaysracha/weather-ui:latest
+    #container_name: weatherui
+    networks:
+      - weather-network
+    expose:
+      - "80"
+    depends_on:
+      - weatherapi
+    deploy:
+      replicas: 3
+    restart: unless-stopped
+
+  loadbalancer:
+    image: nginx:alpine
+    container_name: nginx-lb
+    networks:
+      - weather-network
+    ports:
+      - "3000:80"  # External access point
+    volumes:
+      - ./nginx-lb.conf:/etc/nginx/nginx.conf:ro  # ← Mounts nginx-lb.conf
+    depends_on:
+      - weatherui
+    restart: unless-stopped
+    
+networks:
+  weather-network:
+    driver: bridge
