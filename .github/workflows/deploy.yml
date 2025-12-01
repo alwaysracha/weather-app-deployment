@@ -1,0 +1,45 @@
+name: Deploy Weather App to NAS
+
+on:
+  # Manual trigger from GitHub UI
+  workflow_dispatch:
+  
+  # Automatic trigger when UI image is pushed
+  repository_dispatch:
+    types:
+      - ui-image-updated
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Get your deployment files (includes deploy.sh)
+      - name: Checkout deployment files
+        uses: actions/checkout@v4
+      
+      # Step 2: Set up SSH key for authentication
+      - name: Configure SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          # Add SSH key to ssh-agent so your script can use it
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/deploy_key
+          
+          # Disable host key checking for automated deployments
+          echo "Host ${{ secrets.SSH_HOST }}" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+      
+      # Step 3: Run your existing deployment script
+      - name: Run deployment script
+        run: |
+          chmod +x deploy.sh
+          ./deploy.sh
+        env:
+          # Pass secrets as environment variables if you want to make script more flexible
+          QNAP_IP: ${{ secrets.SSH_HOST }}
+          QNAP_USER: ${{ secrets.SSH_USER }}
