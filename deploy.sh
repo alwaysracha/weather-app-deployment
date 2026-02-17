@@ -1,8 +1,8 @@
 #!/bin/bash
 # deploy.sh - Deploy to QNAP
 
-QNAP_IP="192.168.0.128"
-QNAP_USER="kracha"
+QNAP_IP="${QNAP_IP:-10.10.0.128}"
+QNAP_USER="${QNAP_USER:-kracha}"
 QNAP_PATH="/share/Container/weather-app"
 
 echo "Deploying to QNAP..."
