@@ -13,10 +13,11 @@ scp nginx-lb.conf $QNAP_USER@$QNAP_IP:$QNAP_PATH/
 
 # Deploy
 ssh $QNAP_USER@$QNAP_IP << 'EOSSH'
+export PATH=/share/CACHEDEV1_DATA/.qpkg/container-station/bin:$PATH
 cd /share/Container/weather-app
-docker-compose down
-docker-compose pull
-docker-compose up -d
+docker compose down
+docker compose pull
+docker compose up -d
 EOSSH
 
 echo "Deployment complete!"
